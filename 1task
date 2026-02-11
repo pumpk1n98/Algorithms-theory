@@ -1,0 +1,17 @@
+import pandas as pd
+from collections import Counter
+
+df = pd.read_excel('your_file.xlsx')
+df.columns = ['full_name']
+
+def extract_name(full_name):
+    parts = str(full_name).split()
+    return parts[1] if len(parts) > 1 else None
+
+df['name'] = df['full_name'].apply(extract_name)
+name_counts = df['name'].value_counts()
+
+print(name_counts)
+
+repeating_names = name_counts[name_counts > 1]
+print(repeating_names)
