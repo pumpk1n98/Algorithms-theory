@@ -1,0 +1,36 @@
+class CompetitivePlacement:
+    def __init__(self, weights, B):
+        # weights - матрица весов клеток
+        # B - целевая граница, которую должен превысить P2
+        self.weights = weights
+        self.B = B
+        self.n = len(weights)  # размер поля n x n
+
+        self.board = [[0] * self.n for _ in range(self.n)] # Игровое поле: 0 - пусто, 1 - занято P1, 2 - занято P2
+
+        self.current_player = 1 # Начинает игрок P1
+
+        self.p2_score = 0 # Текущая сумма очков игрока P2
+
+    def make_move(self, i, j): #Разместить фишку текущего игрока в клетку (i, j)
+        if self.board[i][j] != 0:# Проверка, свободна ли клетка
+            return False
+        self.board[i][j] = self.current_player # Занимаем клетку текущим игроком
+
+        if self.current_player == 2: # Если ходил P2, добавляем вес клетки к его счету
+            self.p2_score += self.weights[i][j]
+
+            if self.p2_score > self.B:# Проверка победы P2
+                return 2  # P2 выиграл
+
+        self.current_player = 3 - self.current_player # Смена игрока (1 -> 2, 2 -> 1)
+
+        return True  # Ход успешен
+
+    def get_empty_cells(self): #Возвращает список всех свободных клеток на поле
+        empty = []
+        for i in range(self.n):
+            for j in range(self.n):
+                if self.board[i][j] == 0:  # клетка свободна
+                    empty.append((i, j))
+        return empty
